@@ -10,6 +10,8 @@ RUN python -m pip install --no-cache-dir -r requirements.txt \
         "setuptools>=78.1.1" \
         "urllib3>=2.8.0"
 
+RUN rm -f /usr/local/lib/python3.13/site-packages/pip/_vendor/bom.cdx.json
+
 COPY app.py .
 
 EXPOSE 5000
