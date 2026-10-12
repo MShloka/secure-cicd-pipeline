@@ -74,6 +74,14 @@ jobs:
           docker build \
             -t secure-cicd-app:${{ github.sha }} .
 
+      - name: Clean previous scan report
+        run: rm -f trivy-report.txt
+
+      - name: Verify installed package versions
+        run: |
+          docker run --rm secure-cicd-app:${{ github.sha }} \
+            python -m pip show msgpack setuptools urllib3
+
       - name: Scan Docker image with Trivy
         uses: aquasecurity/trivy-action@0.35.0
         with:
