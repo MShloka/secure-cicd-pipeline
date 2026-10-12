@@ -83,6 +83,7 @@ jobs:
             python -m pip show msgpack setuptools urllib3
 
       - name: Scan Docker image with Trivy
+        id: trivy
         uses: aquasecurity/trivy-action@0.35.0
         with:
           image-ref: secure-cicd-app:${{ github.sha }}
@@ -92,6 +93,15 @@ jobs:
           exit-code: "1"
           ignore-unfixed: true
 
+      - name: Print Trivy report for debugging
+        if: always()
+        run: |
+          if [ -f trivy-report.txt ]; then
+            cat trivy-report.txt
+          else
+            echo "Trivy report was not generated"
+          fi
+          
       - name: Publish image to GitHub Container Registry
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
